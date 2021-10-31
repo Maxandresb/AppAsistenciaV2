@@ -1,0 +1,40 @@
+<app-headerlog></app-headerlog>
+
+<ion-content>
+  <div  class="ion-padding">
+    <h1>¿Olvidaste tu contraseña?</h1>
+   <p>Ingresa tu Usuario y te indicaremos como recuperarla</p>
+  </div >
+ 
+  <div  class="ion-padding" >
+
+
+        
+        
+          <form #LogForm="ngForm" (ngSubmit)="onSubmit(LogForm)" >
+            
+            <ion-item class="ion-padding-top">
+              <ion-label position="floating">Usuario</ion-label>
+              <ion-input type="text" required [(ngModel)]="usuario.username" name="recuser"></ion-input>
+            </ion-item>
+           
+            <div class="ion-padding-top">
+              <ion-button  type="submit" expand="full">
+                Recuperar 
+              </ion-button>
+            </div>
+            
+            <ion-text class="ion-padding-top" color="primary" routerLink="../login">
+              <p>Volver a Iniciar Sesion</p>
+            </ion-text>
+          
+          
+          
+          </form>
+          
+
+    
+  </div>
+</ion-content>
+
+<app-duocfooter></app-duocfooter>
