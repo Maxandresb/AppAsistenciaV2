@@ -13,7 +13,7 @@ import {AngularFireModule} from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
 import {AngularFireAuthModule} from '@angular/fire/compat/auth';
-
+import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,7 +27,8 @@ import {AngularFireAuthModule} from '@angular/fire/compat/auth';
     AngularFireAuthModule,
   ],
      
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, ],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+              QRScanner ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
