@@ -1,10 +1,26 @@
-export interface localuser{
+export interface credenciales{
     username:string,
     password:string,
-    nombre:string,
+    
 }
 
-export interface webuser{
-   username?:string,
-   password?:string,
+export interface Usuario{
+    uid:string,
+    email:string,
+    nombre:string,
+    asignaturas:Asignatura[],
+    
+}
+
+export interface Asignatura{
+    id:string,
+    nombre:string,
+    codigo:string,
+    asistencias:Asistencia[],
+}
+
+
+export interface Asistencia{
+    id:string,
+    fechaHora:any,
 }

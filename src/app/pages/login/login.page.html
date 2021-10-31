@@ -14,11 +14,11 @@
             
             <ion-item class="ion-padding-top">
               <ion-label position="floating">Usuario</ion-label>
-              <ion-input type="text" required [(ngModel)]="usuario.username" name="loguser"></ion-input>
+              <ion-input type="text" required [(ngModel)]="credenciales.username" name="loguser"></ion-input>
             </ion-item>
             <ion-item class="ion-padding-top">
               <ion-label position="floating">Contraseña</ion-label>
-              <ion-input type="password" [(ngModel)]="usuario.password" required name="logpass" ></ion-input>
+              <ion-input type="password" [(ngModel)]="credenciales.password" required name="logpass" ></ion-input>
               
             </ion-item>
             <ion-text color="primary" id="link" routerLink="../passrecover">
@@ -31,7 +31,9 @@
             </div>
             
           
-          
+            <ion-button (click)="logout()" expand="block">
+              Cerrar Sesion
+            </ion-button>
           
           
           </form>

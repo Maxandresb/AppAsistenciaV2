@@ -11,7 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 import{IonicStorageModule} from '@ionic/storage-angular';
 import {AngularFireModule} from '@angular/fire/compat';
 import { environment } from '../environments/environment';
-import {AngularFirestoreModule} from '@angular/fire/compat/firestore'
+import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
+import {AngularFireAuthModule} from '@angular/fire/compat/auth';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {AngularFirestoreModule} from '@angular/fire/compat/firestore'
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFirestoreModule
+    AngularFirestoreModule.enablePersistence(),
+    AngularFireAuthModule,
   ],
      
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, ],

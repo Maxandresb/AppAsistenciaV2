@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
+import { Asignatura, Usuario } from '../../interfaces/models';
+import { FirebaseauthService } from '../../services/firebaseauth.service';
+import { FirestoreService } from '../../services/firestore.service';
 
 @Component({
   selector: 'app-asignaturas',
@@ -6,30 +10,60 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./asignaturas.page.scss'],
 })
 export class AsignaturasPage implements OnInit {
-  asistencia=[{
-    asignatura:'Programacion de Aplicaciones Moviles',
-    codigo:'PGY-4121',
-    porcentaje:'100% (10 de 10 clases)'
-  },
-  {
-    asignatura:'Calidad de Software',
-    codigo:'CSY-41111',
-    porcentaje:'80% (8 de 10 clases)'
-  },
-  {
-    asignatura:'Arquitectura',
-    codigo:'ASY-4131',
-    porcentaje:'100% (10 de 10 clases)'
-  },
- {
-  asignatura:'Inglés',
-  codigo:'INI-5111',
-  porcentaje:'60% (6 de 10 clases)'
+  uid: string = '';
+  usuario: Usuario
+  asignaturas: Asignatura[] = [];
 
-}]
-  constructor() { }
 
-  ngOnInit() {
+  asistenciasPath = '';
+  constructor(private menuCtrl: MenuController, public firebaseauthService: FirebaseauthService, public firestoreService: FirestoreService) {
+    this.firebaseauthService.stateAuth().subscribe(res => {
+      if (res != null) {
+        this.uid = res.uid
+      }
+    })
   }
+
+
+
+
+
+  async ngOnInit() {
+    await this.firebaseauthService.getUid().then(res => {
+      this.uid = res
+    })
+    this.getAsignaturas(this.uid)
+  }
+
+
+
+
+  getUser(uid: string) {
+    const path = 'usuarios';
+    this.firestoreService.getDoc(path, uid)
+  }
+
+  async getAsignaturas(uid: string) {
+    let asignaturasPath = 'usuarios/' + uid + '/asignaturas';
+        this.firestoreService.getCollectionChanges<Asignatura>(asignaturasPath).subscribe(res => {
+          this.asignaturas = res;
+        })
+   
+
+  }
+
+
+
+
+
+
+
+  // await this.firebaseauthService.stateAuth().subscribe(res => {
+  //   if (res != null) {
+  //     this.uid = res.uid
+      
+  //   } })
+
+
 
 }

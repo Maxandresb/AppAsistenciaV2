@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { Opcionesmenu } from './interfaces/opcionesmenu';
 import {Storage} from '@ionic/storage-angular'
-import { localuser } from './interfaces/models';
+import { FirebaseauthService } from './services/firebaseauth.service';
+import { Router } from '@angular/router';
+
 
 
 @Component({
@@ -19,16 +21,23 @@ export class AppComponent {
 ]
 
  
-  constructor( private storage:Storage) {
-
+  constructor( 
+    private storage:Storage,
+    private firebaseauthService: FirebaseauthService,
+    private router:Router
+    ) {
+      
   }
 
   async ngOnInit() {
     
-    await this.storage.create();
-    
+   
   }
-
+  logout(){
+    this.firebaseauthService.logout().then(()=>{
+      this.router.navigate(['login'])
+    });
+  }
 
 
 }

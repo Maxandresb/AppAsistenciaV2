@@ -26,27 +26,22 @@
     <ion-label>Fecha</ion-label>
     <ion-label slot="end">Hora</ion-label>
   </ion-item>
-  <ion-list>
+  <ion-list *ngFor="let item of asistencias" >
     <ion-item lines="none">
-      <ion-label>22-09-2021</ion-label>
-      <ion-label slot="end">13:47</ion-label>
+      <ion-label>{{item.fechaHora.toDate() |date:'dd MMM'}}</ion-label>
+      <ion-label slot="end">{{item.fechaHora.toDate() |date:'hh:mm'}}</ion-label>
     </ion-item>
-    <ion-item lines="none">
-      <ion-label>22-09-2021</ion-label>
-      <ion-label slot="end">13:47</ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>22-09-2021</ion-label>
-      <ion-label slot="end">13:47</ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>22-09-2021</ion-label>
-      <ion-label slot="end">13:47</ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>22-09-2021</ion-label>
-      <ion-label slot="end">13:47</ion-label>
-    </ion-item>
+    
     </ion-list>
   </ion-content>
 <app-duocfooter></app-duocfooter>
+
+
+
+
+
+
+
+
+
+

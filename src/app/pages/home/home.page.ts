@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { FirebaseauthService } from '../../services/firebaseauth.service';
+import { FirestoreService } from '../../services/firestore.service';
+import { Asignatura } from '../../interfaces/models';
 
 @Component({
   selector: 'app-home',
@@ -8,8 +11,39 @@ import { MenuController } from '@ionic/angular';
 })
 export class HomePage {
 
-  constructor( private menuCtrl:MenuController) {}
+
+ 
+  asignaturas:Asignatura[]=[];
+
+ 
+  asistenciasPath='';
+
+
+  constructor( private menuCtrl:MenuController, public firebaseauthService:FirebaseauthService, public firestoreService:FirestoreService) {}
   ionViewWillEnter(){
    this.menuCtrl.enable(true)
   }
+
+
+  ngOnInit() {
+    
+  }
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
 }

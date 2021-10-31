@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
-import { webuser } from '../interfaces/models';
+
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreService {
-  usersCollection:AngularFirestoreCollection<webuser>;
-  users: Observable<webuser[]>;
+  
   constructor( public Firestore:AngularFirestore) { 
-    this.users= this.Firestore.collection('usuarios').valueChanges();
+   
   }
 
   crearDoc<type>(data:type , path:string){
@@ -22,21 +21,27 @@ export class FirestoreService {
   }
 
 
-  getCollectionChanges<type>(path:string):Observable<type>{
-    const itemDoc: AngularFirestoreDocument<type>= 
-          this.Firestore.doc<type>(path);
+  getCollectionChanges<type>(path:string):Observable<type[]>{
+    const itemDoc= 
+          this.Firestore.collection<type>(path);
     return itemDoc.valueChanges();
   }
 
-  getDoc<type>(path:string):Observable<type>{
-    const itemDoc: AngularFirestoreDocument<type>= 
-          this.Firestore.doc<type>(path);
-    return itemDoc.valueChanges();
+
+  getDoc(path:string, id:string){
+    const collection =this.Firestore.collection(path);
+    return collection.doc(id).valueChanges()
   }
 
-  getUser(){
-    
-    return this.users;
-      
-  }
+  // getDoc<type>(path:string):Observable<type>{
+  //   const itemDoc: AngularFirestoreDocument<type>= 
+  //         this.Firestore.doc<type>(path);
+  //   return itemDoc.valueChanges();
+  // }
+
+  // getCollectionChanges<type>(path:string):Observable<type>{
+  //   const itemDoc: AngularFirestoreDocument<type>= 
+  //         this.Firestore.doc<type>(path);
+  //   return itemDoc.valueChanges();
+  // }
 }

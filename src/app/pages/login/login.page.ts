@@ -1,13 +1,16 @@
+
 import {  AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 
 import { FirestoreService } from '../../services/firestore.service';
-import { localuser, webuser } from '../../interfaces/models';
+import { credenciales, Usuario } from '../../interfaces/models';
 
 import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
+import { FirebaseauthService } from '../../services/firebaseauth.service';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-login',
@@ -15,77 +18,65 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  usuario :localuser={
+  credenciales :credenciales={
     username:'',
     password:'',
-    nombre:'',
    
-  }
-  usertest:localuser={
-    username:'',
-    password:'',
+   
+  };
+  usuario:Usuario={
+    uid:'',
+    email:'',
     nombre:'',
-  };
-  user1:localuser={
-    username:'max.benavente',
-    password:'1234',
-    nombre:'Maximiliano',
-  };
-  user2:localuser={
-    username:'ben.gatica',
-    password:'1234',
-    nombre:'Benjamin',
+    asignaturas:[],
+
   };
   
+  
 
-
-  constructor(private menuCtrl: MenuController, public Firestore: FirestoreService, private storage: Storage , private router:Router) {
-
+  constructor(private menuCtrl: MenuController,
+     public Firestore: FirestoreService, 
+     private storage: Storage , 
+     private router:Router,
+     public firebaseauthService: FirebaseauthService
+     ) {
+      this.firebaseauthService.stateAuth().subscribe( res =>{
+        console.log(res)
+      });
     
    }
 
-  ngOnInit() {
-    this.guardarUsers(this.user1);
-    this.guardarUsers(this.user2);
-    this.vaciarActivo();
+  async ngOnInit() {
+   const uid= await this.firebaseauthService.getUid();
+    console.log('usuario ' +uid)
+    this.menuCtrl.enable(false)
   }
 
-  async guardarUsers(usr:localuser){
-    await this.storage.set(usr.username,usr)
-  }
+  
 
-  async vaciarActivo(){
-    await this.storage.remove('activo')
-  }
-  ionViewWillEnter(){
-   this.menuCtrl.enable(false)
-  }
-  onSubmit(){
-   this.logear()
+  
+  
+   async onSubmit(){
+    await this.logear().then(()=>{
+      this.router.navigate(['../'])
+    });
+    
    }
       
   
   async logear(){
-    
-    let userok= await this.storage.get(this.usuario.username)
-    if (userok!=null){
-      userok=this.usertest
-      
-      if(this.usertest.password==this.usuario.password)
-      console.log('aqui')
-         await this.crearActivo(this.usuario.username)
-        this.router.navigate(['/home'],)
-    }
-    else{
-      console.log('no encotrado')
-    }
+    let email= this.credenciales.username+'@duocuc.cl';
+    //console.log(email)
+   return this.firebaseauthService.login(email , this.credenciales.password);
+   
+  }
+
+  logout(){
+    this.firebaseauthService.logout();
   }
 
 
-
-  async crearActivo(username:string){
-    await this.storage.set('activo',username)
-  }
+  
 }
     
   
