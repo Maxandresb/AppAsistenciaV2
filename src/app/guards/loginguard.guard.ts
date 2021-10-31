@@ -18,12 +18,12 @@ export class LoginguardGuard implements CanActivate {
     if (activo!=null){
       return true
     }
-    // else {
-    //   // start a new navigation to redirect to login page
-    //   // this.router.navigate(['/login']);
-    //   // abort current navigation
-    //   return false;
-    // }
+    else {
+      
+      this.router.navigate(['/login']);
+      
+      return false;
+    }
   }
   canActivate(
     route: ActivatedRouteSnapshot,
