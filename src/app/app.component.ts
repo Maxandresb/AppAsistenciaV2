@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Opcionesmenu } from './interfaces/opcionesmenu';
+import {Storage} from '@ionic/storage-angular'
+import { localuser } from './interfaces/models';
+
 
 @Component({
   selector: 'app-root',
@@ -15,7 +18,30 @@ export class AppComponent {
   },
 ]
 
+  user1:localuser={
+    username:'max.benavente',
+    password:'1234',
+    nombre:'',
+  };
+  user2:localuser={
+    username:'ben.gatica',
+    password:'1234',
+    nombre:'',
+  };
+
+  constructor( private storage:Storage) {
+
+  }
+
+  async ngOnInit() {
+    
+    await this.storage.create();
+    
+  }
 
 
-  constructor() {}
+
+  async guardarUsers(usr:localuser){
+    await this.storage.set(usr.username,usr)
+  }
 }
