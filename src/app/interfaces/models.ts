@@ -22,5 +22,5 @@ export interface Asignatura{
 
 export interface Asistencia{
     id:string,
-    fechaHora:any,
+    fechaHora:Date,
 }

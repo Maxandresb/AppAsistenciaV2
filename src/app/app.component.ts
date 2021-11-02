@@ -26,18 +26,21 @@ export class AppComponent {
     private firebaseauthService: FirebaseauthService,
     private router:Router
     ) {
-      
+      this.storage.create()
   }
 
   async ngOnInit() {
-    
+    this.storage.create()
    
   }
   logout(){
     this.firebaseauthService.logout().then(()=>{
+      this.vaciarSaludo
       this.router.navigate(['login'])
     });
   }
 
-
+  async vaciarSaludo(){
+    await this.storage.set('saludo',0)
+  }
 }

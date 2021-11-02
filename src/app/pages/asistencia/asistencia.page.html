@@ -14,9 +14,9 @@
 
 <ion-content>
   <div style="text-align: center">
-    <ion-title class="ion-padding-top" color="primary">Programación de App Moviles</ion-title>
+    <ion-title class="ion-padding-top" color="primary">{{asignatura}}</ion-title>
     <ion-text color="secondary">
-      <p color="secondary">PGY-4121</p>
+      <p color="secondary">{{ida}}</p>
       
     </ion-text>    
   </div>
@@ -28,8 +28,8 @@
   </ion-item>
   <ion-list *ngFor="let item of asistencias" >
     <ion-item lines="none">
-      <ion-label>{{item.fechaHora.toDate() |date:'dd MMM'}}</ion-label>
-      <ion-label slot="end">{{item.fechaHora.toDate() |date:'hh:mm'}}</ion-label>
+      <ion-label>{{item.fechaHora.toDate() |date:'dd MMM YY'}}</ion-label>
+      <ion-label slot="end">{{item.fechaHora.toDate() |date:'hh:mm a'}}</ion-label>
     </ion-item>
     
     </ion-list>

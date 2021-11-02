@@ -1,7 +1,7 @@
 
 import {  AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { LoadingController, MenuController, AlertController } from '@ionic/angular';
 
 import { FirestoreService } from '../../services/firestore.service';
 import { credenciales, Usuario } from '../../interfaces/models';
@@ -38,28 +38,48 @@ export class LoginPage implements OnInit {
      public Firestore: FirestoreService, 
      private storage: Storage , 
      private router:Router,
-     public firebaseauthService: FirebaseauthService
+     public firebaseauthService: FirebaseauthService,
+     public  loadingController: LoadingController,
+     private alertController:AlertController
      ) {
       this.firebaseauthService.stateAuth().subscribe( res =>{
         console.log(res)
       });
-    
+      this.menuCtrl.enable(false)
    }
 
   async ngOnInit() {
    const uid= await this.firebaseauthService.getUid();
     console.log('usuario ' +uid)
-    this.menuCtrl.enable(false)
+   
+    this.vaciarSaludo()
   }
 
-  
+  ionViewDidLoad(){
+    
+  }
 
   
   
    async onSubmit(){
-    await this.logear().then(()=>{
-      this.router.navigate(['../'])
-    });
+     if (this.credenciales.username!='' && this.credenciales.password!=''){
+       this.presentLoading()
+       await this.logear().then(()=>{
+         this.statusSalute()
+        this.loadingController.dismiss()
+        this.router.navigate(['../'])
+      }).catch(e=>{
+        let err='Credenciales no validas';
+        this.loadingController.dismiss()
+        this.presentAlert(err)
+      });
+     }
+     else{
+      let err='Ingrese datos';
+      this.loadingController.dismiss()
+      this.presentAlert(err)
+     }
+    
     
    }
       
@@ -75,8 +95,49 @@ export class LoginPage implements OnInit {
     this.firebaseauthService.logout();
   }
 
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      
+      cssClass: 'my-custom-class',
+      message: 'Espere..',
+      duration: 2000
+    });
+    await loading.present();
 
-  
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
+  }
+
+  async presentAlert(error) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: error,
+      //subHeader: 'Subtitle',
+      //message:error,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+
+    const { role } = await alert.onDidDismiss();
+    console.log('onDidDismiss resolved with role', role);
+  }
+
+
+
+
+  async statusSalute(){
+    await this.storage.set("saludo", 0)
+  }
+
+
+
+  async vaciarSaludo(){
+    await this.storage.set('saludo',0)
+  }
+
+
+
 }
     
   

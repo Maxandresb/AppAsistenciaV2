@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
+import { Usuario } from '../interfaces/models';
 
 
 
@@ -13,10 +14,11 @@ export class FirestoreService {
    
   }
 
-  crearDoc<type>(data:type , path:string){
+
+  crearDoc<type>(data:type , path:string,id:string){
     const itemsCollection: AngularFirestoreCollection<type>=
           this.Firestore.collection<type>(path);
-    return itemsCollection.add(data);
+    return itemsCollection.doc(id).set(data);
 
   }
 
@@ -28,9 +30,17 @@ export class FirestoreService {
   }
 
 
-  getDoc(path:string, id:string){
-    const collection =this.Firestore.collection(path);
+  getDoc<type>(path:string, id:string){
+    const collection =this.Firestore.collection<type>(path);
     return collection.doc(id).valueChanges()
+  }
+
+
+  crearid(){
+    return this.Firestore.createId()
+  }
+  getUser(){
+
   }
 
   // getDoc<type>(path:string):Observable<type>{

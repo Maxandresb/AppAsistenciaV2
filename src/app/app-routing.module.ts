@@ -15,7 +15,7 @@ const routes: Routes = [
   
   
   {
-    path: 'asistencia/:id',
+    path: 'asistencia/:id/:nom',
     loadChildren: () => import('./pages/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
   },
  
