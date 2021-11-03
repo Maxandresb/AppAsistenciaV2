@@ -50,15 +50,17 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
    const uid= await this.firebaseauthService.getUid();
-    console.log('usuario ' +uid)
+   
    
     this.vaciarSaludo()
   }
 
   ionViewDidLoad(){
-    
+    this.vaciarSaludo()
   }
-
+  ionViewDidEnter(){
+    this.vaciarSaludo()
+  }
   
   
    async onSubmit(){
@@ -69,9 +71,9 @@ export class LoginPage implements OnInit {
         this.loadingController.dismiss()
         this.router.navigate(['../'])
       }).catch(e=>{
-        let err='Credenciales no validas';
+        
         this.loadingController.dismiss()
-        this.presentAlert(err)
+        this.presentAlert(e.message)
       });
      }
      else{

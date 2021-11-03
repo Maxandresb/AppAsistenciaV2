@@ -54,7 +54,7 @@ export class AsignaturasPage implements OnInit {
     })
   }
 
-
+  
   
 
 
@@ -65,9 +65,10 @@ export class AsignaturasPage implements OnInit {
       this.uid = res
       this.getUser(this.uid);
     })
-    if (this.asignaturas==[]){
-      this.presentLoading()
-    }
+    
+    
+     
+    
     await this.getUser(this.uid)
    
     
@@ -98,15 +99,17 @@ export class AsignaturasPage implements OnInit {
   }
 
   async getAsignaturas(uid: string) {
+    this.presentLoading()
     let asignaturasPath = 'usuarios/' + uid + '/asignaturas';
     this.firestoreService.getCollectionChanges<Asignatura>(asignaturasPath).subscribe(res => {
+      this.loadingController.dismiss()
       this.asignaturas = res;
     })
 
 
   }
 
-
+  
 
 
   async presentLoading() {
@@ -116,7 +119,7 @@ export class AsignaturasPage implements OnInit {
       message: 'Cargando..',
       duration: 5000
     });
-    await loading.present();
+     loading.present();
 
     const { role, data } = await loading.onDidDismiss();
     console.log('Loading dismissed!');

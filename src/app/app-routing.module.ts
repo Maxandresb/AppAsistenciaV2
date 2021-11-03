@@ -16,17 +16,19 @@ const routes: Routes = [
   
   {
     path: 'asistencia/:id/:nom',
-    loadChildren: () => import('./pages/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
+    loadChildren: () => import('./pages/asistencia/asistencia.module').then( m => m.AsistenciaPageModule),
+    canActivate:[AngularFireAuthGuard],data:{authGuardPipe: redirectUnauthorizedToLogin},
   },
  
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule),
-    //canActivate:[AngularFireAuthGuard],data:{authGuardPipe: redirectLoggedInToHome},
+    canActivate:[AngularFireAuthGuard],data:{authGuardPipe: redirectLoggedInToHome},
   },
   {
     path: 'passrecover',
-    loadChildren: () => import('./pages/passrecover/passrecover.module').then( m => m.PassrecoverPageModule)
+    loadChildren: () => import('./pages/passrecover/passrecover.module').then( m => m.PassrecoverPageModule),
+    canActivate:[AngularFireAuthGuard],data:{authGuardPipe: redirectLoggedInToHome},
   },
 ];
 

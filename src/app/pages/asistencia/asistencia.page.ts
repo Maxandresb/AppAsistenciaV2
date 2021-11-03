@@ -1,3 +1,4 @@
+import { LoadingController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Component, OnInit } from '@angular/core';
 import { FirebaseauthService } from '../../services/firebaseauth.service';
@@ -15,8 +16,14 @@ export class AsistenciaPage implements OnInit {
   ida='';
   asistencias:Asistencia[]=[];
   asignatura:'';
+  // PGY4121|2021-10-11|13:41 <= formato qr
 
-  constructor(public firebaseauthService: FirebaseauthService, public firestoreService: FirestoreService, private activatedroute:ActivatedRoute, db :AngularFirestore) { 
+
+  constructor(public firebaseauthService: FirebaseauthService,
+     public firestoreService: FirestoreService,
+      private activatedroute:ActivatedRoute,
+      db :AngularFirestore,
+      public  loadingController:LoadingController) { 
     this.activatedroute.params.subscribe(params =>{
       let id= params['id']
       let nom= params['nom']
@@ -26,14 +33,14 @@ export class AsistenciaPage implements OnInit {
 
     this.firebaseauthService.getUid().then(res => {
       this.uid = res
-      this.getAsistencias(this.uid,this.ida)
-      this.getAsignatura(this.uid,this.ida)
+      //this.getAsistencias(this.uid,this.ida)
+      //this.getAsignatura(this.uid,this.ida)
       
     })
     let path='usuarios/'+this.uid+'/asignaturas' ;
    
 
-    console.log(this.asignatura)
+    
   }
 
   async ngOnInit() {
@@ -42,7 +49,7 @@ export class AsistenciaPage implements OnInit {
       this.getAsistencias(this.uid,this.ida)
       
       this.getAsignatura(this.uid,this.ida)
-      console.log(this.asignatura)
+     
     })
     // await this.activatedroute.params.subscribe(params =>{
     //   let id= params['id']
@@ -62,12 +69,36 @@ export class AsistenciaPage implements OnInit {
 
 
   async getAsistencias(uid: string, id:string) {
-    
+    this.presentLoading()
     let asignaturasPath = 'usuarios/' + uid + '/asignaturas/'+id+'/asistencias';
-    console.log(asignaturasPath)
+    
         this.firestoreService.getCollectionChanges<Asistencia>(asignaturasPath).subscribe(res => {
+          this.loadingController.dismiss();
           this.asistencias = res;
+          
          
         })
 }
+
+
+
+async presentLoading() {
+  const loading = await this.loadingController.create({
+
+    cssClass: 'my-custom-class',
+    message: 'Cargando..',
+    duration: 5000
+  });
+   loading.present();
+
+  const { role, data } = await loading.onDidDismiss();
+  console.log('Loading dismissed!');
+}
+
+
+
+
+
+
+
 }

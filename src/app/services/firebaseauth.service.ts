@@ -39,4 +39,13 @@ export class FirebaseauthService {
   stateAuth(){
    return  this.auth.authState
   }
+
+
+  async resetPassword(email:string){
+    try {
+      return this.auth.sendPasswordResetEmail(email)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
