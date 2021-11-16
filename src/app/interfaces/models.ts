@@ -16,6 +16,7 @@ export interface Asignatura{
     id:string,
     nombre:string,
     codigo:string,
+    email:string,
     asistencias:Asistencia[],
 }
 

@@ -1,10 +1,12 @@
+import { Storage } from '@ionic/storage-angular';
 import { Component, OnInit } from '@angular/core';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 import { FirebaseauthService } from '../../services/firebaseauth.service';
 import { FirestoreService } from '../../services/firestore.service';
 import { AlertController, ToastController } from '@ionic/angular';
-import { Asistencia } from '../../interfaces/models';
+import { Asistencia, Asignatura, Usuario } from '../../interfaces/models';
 import { Router } from '@angular/router';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 @Component({
   selector: 'app-scanner',
   templateUrl: './scanner.page.html',
@@ -15,24 +17,37 @@ export class ScannerPage implements OnInit {
   asigid='';
 
   qrtext='';
-  qrSplitted:any
+  qrSplitted:any;
+  asignaturas: Asignatura[] = [];
+  usuario: Usuario;
+
+  mensaje:string;
   constructor( private qr: QRScanner, 
      public firebaseauthService: FirebaseauthService,
      public firestoreService: FirestoreService,
      private alertController:AlertController,
      private toastController:ToastController,
-     private router:Router) { }
+     private router:Router,
+     private storage: Storage,
+     private socialSharing:SocialSharing) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     // this.scan();
-    this.startScan2();
+    
+    await this.getUserid();
+    this.getUser(this.userid)
+    this.getAsignaturas(this.userid)
    
   }
 
-  ionViewDidEnter(){
-    this.getUserid();
+  async ionViewDidEnter(){
+    await this.getUserid();
+    this.getUser(this.userid)
+    this.getAsignaturas(this.userid)
     console.log(this.userid)
     this.startScan2();
+    
+    
   }
   
   ionViewDidLeave(){
@@ -99,18 +114,31 @@ export class ScannerPage implements OnInit {
     
   }
 
-  guardarAsistencia(){
-    let path='usuarios/'+this.userid+'/asignaturas/'+this.qrSplitted[0]+'/asistencias'  ;
+   async guardarAsistencia(){
+    let path='usuarios/'+this.userid+'/asignaturas/'+this.qrSplitted[0]+'/asistencias';
+    this.mensaje= this.usuario.nombre+' registra asistencia para '+this.qrSplitted[0]+' con fecha '+this.qrSplitted[1]+' '+this.qrSplitted[2]
     let idasistencia=this.qrtext
     const asistencia:Asistencia={
       id:idasistencia,
       fechaHora: new Date(this.qrSplitted[1]+' '+this.qrSplitted[2]),
     }
-    this.firestoreService.crearDoc<Asistencia>(asistencia,path,idasistencia)
-
+    this.firestoreService.crearDoc<Asistencia>(asistencia,path,idasistencia).then(()=>{
+      this.compartir(this.qrSplitted[0])
+    })
+    
   }
 
+  async getAsignaturas(uid: string) {
+   
+    let asignaturasPath = 'usuarios/' + uid + '/asignaturas';
+    this.firestoreService.getCollectionChanges<Asignatura>(asignaturasPath).subscribe(res => {
+      
+      this.asignaturas = res;
+      this.storage.set('Asignaturas',res)
+    })
 
+
+  }
   async presentToast() {
     const toast = await this.toastController.create({
 
@@ -142,8 +170,11 @@ export class ScannerPage implements OnInit {
           }
         }, {
           text: 'Aceptar',
-          handler: () => {
-            this.guardarAsistencia()
+          handler: async () => {
+            
+            this.mensaje= this.usuario.nombre+' registra asistencia para '+this.qrSplitted[0]+' con fecha '+this.qrSplitted[1]+' '+this.qrSplitted[2]
+            await this.guardarAsistencia()
+            // await this.compartir(this.qrSplitted[0])
             this.presentToast()
           }
         }
@@ -152,5 +183,35 @@ export class ScannerPage implements OnInit {
 
     await alert.present();
   }
- 
+  
+  compartir(cod){
+      
+      for (var item of this.asignaturas){
+        if(item.codigo==cod){
+          
+          
+          this.mail(item.email)
+        }
+      }
+  }
+
+
+  getUser(id:string){
+    this.storage.get(id).then(res=>{
+      this.usuario=res
+    })
+  }
+
+  crearMensaje(){
+    this.mensaje= this.usuario.nombre+' registra asistencia para '+this.qrSplitted[0]+' con fecha '+this.qrSplitted[1]+' '+this.qrSplitted[2]
+  }
+  mail(emailA:string){
+    this.socialSharing.canShareViaEmail().then(() => {
+      // Sharing via email is possible
+      this.socialSharing.shareViaEmail(this.mensaje,'Registro Asistencia',[emailA],)
+    }).catch(() => {
+      // Sharing via email is not possible
+    });
+    
+  }
 }

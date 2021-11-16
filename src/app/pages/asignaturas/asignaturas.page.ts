@@ -71,7 +71,7 @@ export class AsignaturasPage implements OnInit {
     
     await this.getUser(this.uid)
    
-    
+    // await this.saveUser(this.uid)
     this.getAsignaturas(this.uid).then(()=>{
      
       this.loadingController.dismiss();
@@ -94,9 +94,22 @@ export class AsignaturasPage implements OnInit {
     const path = 'usuarios';
      await this.firestoreService.getDoc<Usuario>(path, uid).subscribe( res=>{
        this.usuario= res
+       this.storage.set(uid,res)
      })
     
   }
+
+  // async saveUser(uid:string){
+  //   let usuario: Usuario={
+  //     uid:'',
+  //     email:'',
+  //     nombre:'',
+  //     asignaturas:[],
+  //   } ;
+
+
+  //   await this.storage.set(uid,this.usuario)
+  // }
 
   async getAsignaturas(uid: string) {
     this.presentLoading()
@@ -104,6 +117,7 @@ export class AsignaturasPage implements OnInit {
     this.firestoreService.getCollectionChanges<Asignatura>(asignaturasPath).subscribe(res => {
       this.loadingController.dismiss()
       this.asignaturas = res;
+      this.storage.set('Asignaturas',res)
     })
 
 
@@ -122,7 +136,7 @@ export class AsignaturasPage implements OnInit {
      loading.present();
 
     const { role, data } = await loading.onDidDismiss();
-    console.log('Loading dismissed!');
+    //console.log('Loading dismissed!');
   }
 
   async presentAlert(error) {

@@ -42,15 +42,13 @@ export class LoginPage implements OnInit {
      public  loadingController: LoadingController,
      private alertController:AlertController
      ) {
-      this.firebaseauthService.stateAuth().subscribe( res =>{
-        console.log(res)
-      });
+     
       this.menuCtrl.enable(false)
    }
 
   async ngOnInit() {
    const uid= await this.firebaseauthService.getUid();
-   
+  //  this.storage.create()
    
     this.vaciarSaludo()
   }
@@ -67,7 +65,7 @@ export class LoginPage implements OnInit {
      if (this.credenciales.username!='' && this.credenciales.password!=''){
        this.presentLoading()
        await this.logear().then(()=>{
-         this.statusSalute()
+        this.statusSalute()
         this.loadingController.dismiss()
         this.router.navigate(['../'])
       }).catch(e=>{
@@ -129,7 +127,7 @@ export class LoginPage implements OnInit {
 
 
   async statusSalute(){
-    await this.storage.set("saludo", 0)
+    await this.storage.set('saludo', 0)
   }
 
 

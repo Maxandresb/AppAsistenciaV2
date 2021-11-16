@@ -31,9 +31,11 @@ export class AppComponent {
       this.storage.create()
   }
 
-   ngOnInit() {
-    this.storage.create()
-   
+   async ngOnInit() {
+    await this.storage.create()
+
+    
+    
   }
   logout(){
    this.presentAlertConfirm()

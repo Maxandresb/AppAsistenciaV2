@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Usuario } from '../interfaces/models';
+import { FirestoreService } from './firestore.service';
 
 
 
@@ -7,9 +9,19 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
   providedIn: 'root'
 })
 export class FirebaseauthService {
+  nombre:string='';
+  usuario: Usuario={
+    uid:'',
+    email:'',
+    nombre:'',
+    asignaturas:[],
+  } ;
 
-  constructor(public auth:AngularFireAuth) {
+
+  constructor(public auth:AngularFireAuth,
+              public firestoreService:FirestoreService) {
     this.getUid();
+    this.getUser(this.getUid());
    }
 
 
@@ -35,6 +47,7 @@ export class FirebaseauthService {
    }
   }
 
+  
 
   stateAuth(){
    return  this.auth.authState
@@ -47,5 +60,26 @@ export class FirebaseauthService {
     } catch (error) {
       console.log(error)
     }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  async getUser(uid) {
+    const path = 'usuarios';
+    
+     await this.firestoreService.getDoc<Usuario>(path, uid).subscribe( res=>{
+       this.usuario= res
+     })
+    
   }
 }
